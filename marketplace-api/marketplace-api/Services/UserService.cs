@@ -46,8 +46,16 @@ namespace marketplace_api.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task<User> CreateUser(User user)
+        public async Task<User> CreateUser(string name, string email, long phone, long membership, string password)
         {
+            User user = new User()
+            {
+                Name = name,
+                Email = email,
+                PhoneNumber = phone,
+                MembershipNumber = membership,
+                Password = password
+            };
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
             return user;

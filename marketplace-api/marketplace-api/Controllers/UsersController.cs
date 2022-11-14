@@ -67,20 +67,7 @@ namespace marketplace_api.Controllers
                 
                 Debug.WriteLine("\n\n\n\n\n\n\n" + "ANTAD" + "\n\n\n\\n\n\n");
                 //if (validation) { }
-                User user = new User()
-                {
-                    Name = name,
-                    Email = email,
-                    PhoneNumber = phone,
-                    MembershipNumber = membership,
-                    Password = password
-                };
-                _context.Users.Add(user);
-                //User user =new User(name,email,phone,membership,password)
-             
-                //User newUser = await _userService.CreateUser(user); 
-                //_context.Users.Add(user);
-                await _context.SaveChangesAsync();
+                User user = await _userService.CreateUser(name,email,phone,membership,password); 
                 return CreatedAtAction("GetUser", new { id = user.Id }, user);
             }
             catch (Exception)
