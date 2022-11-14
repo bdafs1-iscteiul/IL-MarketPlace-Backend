@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using marketplace_api.Data;
 using marketplace_api.Models.Entity;
 using marketplace_api.Services;
+using NuGet.Protocol;
+using System.Diagnostics;
 
 namespace marketplace_api.Controllers
 {
@@ -18,16 +20,14 @@ namespace marketplace_api.Controllers
         private readonly ApplicationDbContext _context;
 
         private readonly UserService _userService;
-        public UsersController(UserService userService)
-        {
-            _userService = userService;
-        }
+        public UsersController(UserService userService) => _userService = userService;
 
         // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        [Produces("application/json")]
+        public async Task<ActionResult<IEnumerable<User>>> GetAllUsers()
         {
-            var  users = await  _userService.GetUsers();
+            var  users = await  _userService.GetAllUsers();
             return Ok(users);
         }
 
@@ -43,16 +43,50 @@ namespace marketplace_api.Controllers
             return user;
         }
 
+        [HttpPost("login")]
+        public async Task<ActionResult<User>> GetUser(string email, string password)
+        {
+            
+            var user = await _userService.GetUser(email,password);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return Ok(user);
+        }
+
 
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<User>> PostUser(User user)
+        [Produces("application/json")]
+        public async Task<ActionResult<User>> PostUser(string name, string email,long phone, long membership,string password)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            try
+            {
+                
+                Debug.WriteLine("\n\n\n\n\n\n\n" + "ANTAD" + "\n\n\n\\n\n\n");
+                //if (validation) { }
+                User user = new User()
+                {
+                    Name = name,
+                    Email = email,
+                    PhoneNumber = phone,
+                    MembershipNumber = membership,
+                    Password = password
+                };
+                _context.Users.Add(user);
+                //User user =new User(name,email,phone,membership,password)
+             
+                //User newUser = await _userService.CreateUser(user); 
+                //_context.Users.Add(user);
+                await _context.SaveChangesAsync();
+                return CreatedAtAction("GetUser", new { id = user.Id }, user);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
 
         // DELETE: api/Users/5

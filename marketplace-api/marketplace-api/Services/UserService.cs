@@ -1,6 +1,8 @@
 ﻿using marketplace_api.Data;
 using marketplace_api.Models.Entity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace marketplace_api.Services
 {
@@ -13,14 +15,28 @@ namespace marketplace_api.Services
             _context = context;
         }
 
-        public async Task<IEnumerable<User>> GetUsers()
+        //this should be changed to get users based on a certain condition(age/etc)
+        public async Task<IEnumerable<User>> GetAllUsers()
         {
-            return await _context.Users.ToListAsync();
+            List<User> i=await _context.Users.ToListAsync();
+            return i;
         }
 
         public async Task<User> GetUser(int id)
         {
+
             var user = await _context.Users.FindAsync(id);
+            return user;
+        }
+
+        public async Task<User> GetUser(string email,string password)
+        {
+            var query = from usr in _context.Users
+                        where usr.Email == email
+                        where usr.Password == password
+                        select usr;
+            //_context.Users.Any(e => e.Id == id); something like this?
+            var user = query.FirstOrDefault<User>();
             return user;
         }
 

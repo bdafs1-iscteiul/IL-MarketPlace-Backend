@@ -17,6 +17,15 @@ builder.Services.AddDbContext<ApplicationDbContext>( options =>
     options.UseMySql(conncetionString, ServerVersion.AutoDetect(conncetionString));
 });
 
+builder.Services.AddCors(options =>
+{   
+    options.AddDefaultPolicy(
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000").AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();//Deviamos mudor os Any para apenas os necessarios
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -28,6 +37,8 @@ if (!app.Environment.IsDevelopment())
 }
 
 
+
+app.UseHttpLogging();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -36,6 +47,8 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
+
+app.UseCors();
 app.UseAuthorization();
 
 app.MapRazorPages();

@@ -1,0 +1,9 @@
+
+*.cs
+*.json
+*.v2
+*.vsidx
+*.prject.*
+*.metadata.*
+*.dll
+*.cache
