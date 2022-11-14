@@ -7,3 +7,9 @@
 *.metadata.*
 *.dll
 *.cache
+marketplace-api/.vs/marketplace-api/v17/.suo
+marketplace-api/.vs/marketplace-api/v17/.wsuo
+*.pdb
+*.exe
+*.editorconfig
+*.props
